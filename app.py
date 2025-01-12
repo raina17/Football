@@ -107,7 +107,8 @@ def set_background(image_path):
 set_background("rldo.jpg")  # Replace with your image file name
 
 # --- Game Day Player Registration Title ---
-st.markdown("<h1 style='color:white;'>Sunday, 19th Jan 7:30-9 AM</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='color:white; font-size: 24px;'>Sunday, 19th Jan 7:30-9 AM</h1>", unsafe_allow_html=True)
+
 
 # --- Player Registration Form ---
 with st.form(key='player_form'):
