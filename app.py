@@ -107,7 +107,7 @@ def set_background(image_path):
 set_background("peakpx.jpg")  # Replace with your image file name
 
 # --- Game Day Player Registration Title ---
-st.markdown("<h1 style='color:white;'>🏅 Sunday, 19th Jan</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='color:white;'>Sunday, 19th Jan</h1>", unsafe_allow_html=True)
 
 # --- Player Registration Form ---
 with st.form(key='player_form'):
@@ -118,13 +118,16 @@ with st.form(key='player_form'):
         add_player_to_db(player_name.strip())
         st.success(f"Player {player_name} added to the list!")
 
-st.markdown("<h2>Players for Today:</h2>", unsafe_allow_html=True)
+st.markdown("<h2>Players for the game:</h2>", unsafe_allow_html=True)
 players = get_players_from_db()
 if players:
     for index, player in enumerate(players, start=1):
         st.markdown(f"<p style='color:white;'> {index}. {player}</p>", unsafe_allow_html=True)
 else:
     st.write("No players have been added yet.")
+
+st.markdown("<h3>Venue for the Game:</h2>", unsafe_allow_html=True)
+st.write("To be decided")
 
 
 # --- Admin Controls ---
