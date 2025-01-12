@@ -50,7 +50,7 @@ def set_background(image_path):
     <style>
     .stApp {{
         background-image: url("data:image/jpeg;base64,{encoded_string}");
-        background-size: contain;
+        background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
         background-attachment: fixed;
@@ -58,44 +58,38 @@ def set_background(image_path):
         width: 100%;
     }}
 
-    /* Styling text to be left-aligned and white */
+    /* Styling the page text to be white and mobile-friendly */
     h1, h2, p {{
         color: white;
-        text-align: left;
+        text-align: center;
         margin-top: 20px;
-        margin-left: 20px; /* Align to the left */
     }}
 
-    /* Customizing the text input */
-    .css-1kyxreq {{
+    /* Styling the text inputs for better readability */
+    .css-1kyxreq, .css-2trqjy {{
         color: white;
-        text-align: left;
+        font-size: 18px;
+        width: 100%;
     }}
 
-    .css-2trqjy {{
-        color: white;
-        text-align: left;
-    }}
-
-    /* Make the "Add Player" button red with black text */
-    .stButton:first-of-type > button {{
+    /* Styling the buttons to be consistent and mobile-friendly */
+    .stButton > button {{
         background-color: red !important;
         color: black !important;
         border: none;
-        padding: 10px 20px;
-        font-size: 16px;
+        padding: 12px 24px;
+        font-size: 18px;
+        width: 100%;
         cursor: pointer;
-        
+        margin-top: 15px;
     }}
 
-    /* Make the "Reset List" button red with black text */
+    /* Adjust button size and layout */
+    .stButton:nth-of-type(1) > button {{
+        background-color: red !important;
+    }}
     .stButton:nth-of-type(2) > button {{
         background-color: red !important;
-        color: black !important;
-        border: none;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
     }}
 
     </style>
@@ -107,7 +101,7 @@ def set_background(image_path):
 set_background("wp7508964-2-player-wallpapers.jpg")  # Replace with your image file name
 
 # --- Game Day Player Registration Title ---
-st.markdown("<h1 style='color:white;'>🏅 Sunday, 19th Jan</h1>", unsafe_allow_html=True)
+st.markdown("<h1>🏅 Game Day Player Registration</h1>", unsafe_allow_html=True)
 
 # --- Player Registration Form ---
 with st.form(key='player_form'):
@@ -118,14 +112,14 @@ with st.form(key='player_form'):
         add_player_to_db(player_name.strip())
         st.success(f"Player {player_name} added to the list!")
 
+# --- Display Player List ---
 st.markdown("<h2>Players for Today:</h2>", unsafe_allow_html=True)
 players = get_players_from_db()
 if players:
     for index, player in enumerate(players, start=1):
-        st.markdown(f"<p style='color:white;'> {index}. {player}</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color:white;'>{index}. {player}</p>", unsafe_allow_html=True)
 else:
     st.write("No players have been added yet.")
-
 
 # --- Admin Controls ---
 st.subheader("Admin Controls")
