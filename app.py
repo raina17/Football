@@ -119,7 +119,7 @@ with st.form(key='player_form'):
         add_player_to_db(player_name.strip())
         st.success(f"Player {player_name} added to the list!")
 
-st.markdown("<h2 font-size: 24px;>Players for the game:</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='color:white; font-size: 24px;'>Players for the game:</h2>", unsafe_allow_html=True)
 players = get_players_from_db()
 if players:
     for index, player in enumerate(players, start=1):
@@ -127,7 +127,7 @@ if players:
 else:
     st.write("No players have been added yet.")
 
-st.markdown("<h3 font-size: 24px;>Venue for the Game:</h2>", unsafe_allow_html=True)
+st.markdown("<h3 style='color:white; font-size: 24px;'>Venue for the Game:</h2>", unsafe_allow_html=True)
 st.write("To be decided")
 
 
