@@ -104,7 +104,7 @@ def set_background(image_path):
 )
 
 # Set background image
-set_background("giphy.gif")  # Replace with your image file name
+set_background("rldo.jpg")  # Replace with your image file name
 
 # --- Game Day Player Registration Title ---
 st.markdown("<h1 style='color:white;'>Sunday, 19th Jan</h1>", unsafe_allow_html=True)
