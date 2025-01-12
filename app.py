@@ -104,7 +104,7 @@ def set_background(image_path):
 )
 
 # Set background image
-set_background("peakpx.jpg")  # Replace with your image file name
+set_background("HD-wallpaper-cr7-on-the-football-ground-cr7-football-ronaldo-sports-athlete-thumbnail.jpg")  # Replace with your image file name
 
 # --- Game Day Player Registration Title ---
 st.markdown("<h1 style='color:white;'>Sunday, 19th Jan</h1>", unsafe_allow_html=True)
