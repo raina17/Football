@@ -25,12 +25,19 @@ def add_player_to_db(name):
 def get_players_from_db():
     conn = sqlite3.connect('players.db')
     c = conn.cursor()
-    c.execute('SELECT name FROM players')
-    players = [row[0] for row in c.fetchall()]
+    c.execute('SELECT id, name FROM players')
+    players = c.fetchall()
     conn.close()
     return players
 
-def reset_players_in_db():
+def delete_player_from_db(player_id):
+    conn = sqlite3.connect('players.db')
+    c = conn.cursor()
+    c.execute('DELETE FROM players WHERE id = ?', (player_id,))
+    conn.commit()
+    conn.close()
+
+def delete_all_players():
     conn = sqlite3.connect('players.db')
     c = conn.cursor()
     c.execute('DELETE FROM players')
@@ -77,67 +84,79 @@ def set_background(image_path):
         text-align: left;
     }}
 
-    /* Make the "Add Player" button red with black text */
-    .stButton:first-of-type > button {{
-        background-color: red !important;
-        color: black !important;
+    /* Styling the Login button */
+    div.stButton > button:first-child {{
+        background-color: red;
+        color: white;
         border: none;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        
-    }}
-
-    /* Make the "Reset List" button red with black text */
-    .stButton:nth-of-type(2) > button {{
-        background-color: red !important;
-        color: black !important;
-        border: none;
-        padding: 10px 20px;
+        padding: 0.5em 1em;
+        border-radius: 5px;
         font-size: 16px;
         cursor: pointer;
     }}
-
     </style>
     """,
     unsafe_allow_html=True
 )
 
+
 # Set background image
 set_background("giphy.gif")  # Replace with your image file name
 
-# --- Game Day Player Registration Title ---
-st.markdown("<h1 style='color:white; font-size: 24px;'>Sunday, 19th Jan 7:30-9 AM</h1>", unsafe_allow_html=True)
+# --- Login Page ---
+def login_page():
+    st.title("User Login")
+    name = st.text_input("Enter your name:")
+    if st.button("Login"):
+        if name.strip():
+            st.session_state['user_name'] = name.strip()
+            main_page()
+        else:
+            st.error("Please enter your name to continue.")
 
+# --- Main Page ---
+def main_page():
+    st.markdown("<h1 style='color:white; font-size: 24px;'>Sunday, 19th Jan 7:30-9 AM</h1>", unsafe_allow_html=True)
 
-# --- Player Registration Form ---
-with st.form(key='player_form'):
-    player_name = st.text_input("Enter your name:", max_chars=30)
-    submit_button = st.form_submit_button("Add Player")
+    # --- Player Registration ---
+    if st.button("Add Your Name"):
+        user_name = st.session_state.get('user_name', '').strip()
+        if user_name:
+            add_player_to_db(user_name)
+            st.success(f"Player {user_name} added to the list!")
+        else:
+            st.error("No name found. Please login again.")
 
-    if submit_button and player_name.strip():
-        add_player_to_db(player_name.strip())
-        st.success(f"Player {player_name} added to the list!")
-
-st.markdown("<h2 style='color:white; font-size: 24px;'>Players for the game:</h2>", unsafe_allow_html=True)
-players = get_players_from_db()
-if players:
-    for index, player in enumerate(players, start=1):
-        st.markdown(f"<p style='color:white;'> {index}. {player}</p>", unsafe_allow_html=True)
-else:
-    st.write("No players have been added yet.")
-
-st.markdown("<h3 style='color:white; font-size: 24px;'>Venue for the Game:</h2>", unsafe_allow_html=True)
-st.write("To be decided")
-
-
-# --- Admin Controls ---
-st.subheader("Admin Controls")
-admin_password = st.text_input("Enter admin password to reset the list:", type="password")
-reset_button = st.button("Reset List")
-if reset_button:
-    if admin_password == "admin123":  # Change this password to something secure
-        reset_players_in_db()
-        st.success("Player list has been reset!")
+    st.markdown("<h2 style='color:white; font-size: 24px;'>Players for the game:</h2>", unsafe_allow_html=True)
+    players = get_players_from_db()
+    current_user = st.session_state.get('user_name', '').strip()
+    if players:
+        for index, (player_id, player_name) in enumerate(players, start=1):
+            col1, col2 = st.columns([4, 1])
+            with col1:
+                st.markdown(f"<p style='color:white;'> {index}. {player_name}</p>", unsafe_allow_html=True)
+            if player_name == current_user:
+                with col2:
+                    if st.button("Remove", key=f"remove_{player_id}"):
+                        delete_player_from_db(player_id)
+                        st.rerun()
     else:
+        st.write("No players have been added yet.")
+
+    st.markdown("<h3 style='color:white; font-size: 24px;'>Venue for the Game:</h3>", unsafe_allow_html=True)
+    st.write("To be decided")
+
+    # --- Admin Reset Section ---
+    admin_password = st.text_input("Enter Admin Password to Reset Players List", type="password")
+    if admin_password == "admin123":  # Replace with your desired admin password
+        if st.button("Reset Players List"):
+            delete_all_players()
+            st.success("Players list has been reset!")
+    elif admin_password:
         st.error("Incorrect admin password.")
+
+# --- Main App Logic ---
+if 'user_name' not in st.session_state:
+    login_page()
+else:
+    main_page()
